@@ -1,6 +1,6 @@
-# GO CRUD Generator
+# GO CURD Generator
 
-CRUD Generator is an open source project that generates RESTful APIs for GORM models and chi
+CURD Generator is an open source project that generates RESTful APIs for GORM models and chi
 **go version 1.24.1**
 
 ## Features
@@ -13,7 +13,7 @@ CRUD Generator is an open source project that generates RESTful APIs for GORM mo
 
 ## Installation
 
-To install CRUD Generator, run the following command:
+To install CURD Generator, run the following command:
 
 `
 go get -u github.com/duytacong24895/go-curd-generator
@@ -33,7 +33,7 @@ import (
 	"github.com/duytacong24895/template-api-go/config"
 	"github.com/duytacong24895/template-api-go/database"
 	"github.com/duytacong24895/template-api-go/internal/models"
-	crud_generator "github.com/duytacong24895/go-curd-generator"
+	curd_generator "github.com/duytacong24895/go-curd-generator"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -47,7 +47,7 @@ func main() {
   // RegisterDTOForGetDetail : define dto or struct that return out for api get detail 
   // RegisterDTOForGetList : define dto or struct that return out for api get list
   // RegisterDTOForError : define dto or struct that return out when server return an error
-	crud_generator.NewCRUDGenerator(r, db).w
+	curd_generator.NewCURDGenerator(r, db).w
 		RegisterModel(&models.User{}).
 		RegisterMiddleware(
 			middleware,

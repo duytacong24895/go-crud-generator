@@ -1,4 +1,4 @@
-package crud_generator
+package curd_generator
 
 import (
 	"fmt"
