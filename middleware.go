@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	constants "github.com/Vietnam-Silicon/template-api-go/plugins/crud_generator/const"
-	"github.com/Vietnam-Silicon/template-api-go/plugins/crud_generator/core"
+	constants "github.com/duytacong24895/go-curd-generator/const"
+	"github.com/duytacong24895/go-curd-generator/core"
 	"github.com/go-chi/chi/v5"
 )
 

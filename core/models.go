@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	constants "github.com/Vietnam-Silicon/template-api-go/plugins/crud_generator/const"
+	constants "github.com/duytacong24895/go-curd-generator/const"
 )
 
 type Model struct {

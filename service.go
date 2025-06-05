@@ -3,7 +3,7 @@ package crud_generator
 import (
 	"fmt"
 
-	"github.com/Vietnam-Silicon/template-api-go/plugins/crud_generator/core"
+	"github.com/duytacong24895/go-curd-generator/core"
 	"gorm.io/gorm"
 )
 

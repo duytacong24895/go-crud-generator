@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Vietnam-Silicon/template-api-go/plugins/crud_generator/core"
+	"github.com/duytacong24895/go-curd-generator/core"
 	"github.com/go-chi/chi/v5"
 	"gorm.io/gorm"
 )
