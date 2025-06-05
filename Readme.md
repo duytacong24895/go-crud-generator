@@ -1,6 +1,7 @@
 # GO CRUD Generator
 
 CRUD Generator is an open source project that generates RESTful APIs for GORM models and chi
+**go version 1.24.1**
 
 ## Features
 
@@ -131,7 +132,7 @@ Each block must be wrapped in [] and include three parts: a column or nested blo
   operation: _and
   nested block: ["mature","eq","false"]
 
-3. [["age","gt","20"]] #invalid syntax because it's wrapped by [[]]
+3. [["age","gt","20"]] #invalid syntax because it's wrapped by [[]] with only one block and no nested block
 ```
 
 **Supported Operation**
