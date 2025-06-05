@@ -15,7 +15,7 @@ CRUD Generator is an open source project that generates RESTful APIs for GORM mo
 To install CRUD Generator, run the following command:
 
 `
-go get -u 
+go get -u github.com/duytacong24895/go-curd-generator
 `
 
 ## How To use
