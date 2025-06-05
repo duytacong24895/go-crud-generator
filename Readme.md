@@ -115,7 +115,7 @@ We also support paging, sorting, and filtering features
 - page # start from 1
 - page_size # page length
 - filter # read filter section for more detail
-- order_by # same gorm syntax. Example: "id desc" or ""
+- order_by # same gorm syntax. Example: "id desc" or "id asc" read more at https://gorm.io/docs/query.html#Order
 
 **Filters Query Params**
 
