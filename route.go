@@ -1,15 +1,18 @@
-package curd_generator
+package crud_generator
 
 import (
 	"fmt"
 	"net/http"
 
-	"github.com/duytacong24895/go-curd-generator/core"
+	"github.com/duytacong24895/go-crud-generator/core"
+	"github.com/duytacong24895/go-crud-generator/handler"
+	"github.com/duytacong24895/go-crud-generator/middlewares"
+	"github.com/duytacong24895/go-crud-generator/repositories"
+	"github.com/duytacong24895/go-crud-generator/runtime"
+	"github.com/duytacong24895/go-crud-generator/services"
 	"github.com/go-chi/chi/v5"
 	"gorm.io/gorm"
 )
-
-var listModels []*core.Model
 
 type ICRUDGenerator interface {
 	Run()
@@ -22,7 +25,7 @@ type ICRUDGenerator interface {
 
 type crudGenerator struct {
 	router      *chi.Mux
-	handler     *handler
+	handler     *handler.Handler
 	core        *core.Core
 	middlewares []func(next http.Handler) http.Handler
 }
@@ -32,17 +35,16 @@ func NewCRUDGenerator(router *chi.Mux, db *gorm.DB) ICRUDGenerator {
 	return &crudGenerator{
 		router: router,
 		core:   core,
-		handler: &handler{
-			service:    NewService(NewRepository(db)),
-			core:       core,
-			listModels: listModels,
+		handler: &handler.Handler{
+			Service:    services.NewService(repositories.NewRepository(db)),
+			ListModels: runtime.GetListModels().List,
 		},
 	}
 }
 
 func (c *crudGenerator) RegisterModel(model any) ICRUDGenerator {
 	if c.core.IsPointeOfStruct(model) {
-		listModels = append(listModels, core.NewModel(model))
+		runtime.GetListModels().Add(core.NewModel(model))
 	} else {
 		panic("Model must be a pointer to a struct")
 	}
@@ -70,8 +72,8 @@ func (c *crudGenerator) RegisterDTOForError(returndto func(w http.ResponseWriter
 }
 
 func (c *crudGenerator) Run() {
-	c.router.Route("/curd", func(r chi.Router) {
-		r = r.With(VerifyModel)
+	c.router.Route("/crud", func(r chi.Router) {
+		r = r.With(middlewares.VerifyModel)
 		for _, middleware := range c.middlewares {
 			r = r.With(middleware)
 		}
@@ -82,8 +84,8 @@ func (c *crudGenerator) Run() {
 		r.Delete("/{modelName}/{id}", c.handler.Delete)
 	})
 
-	listModelNames := make([]string, len(listModels))
-	for i, model := range listModels {
+	listModelNames := make([]string, len(runtime.GetListModels().List))
+	for i, model := range runtime.GetListModels().List {
 		listModelNames[i] = model.Name
 	}
 	fmt.Println("CRUD generator initialized")

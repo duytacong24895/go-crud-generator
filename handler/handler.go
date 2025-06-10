@@ -1,4 +1,4 @@
-package curd_generator
+package handler
 
 import (
 	"encoding/json"
@@ -6,21 +6,22 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	constants "github.com/duytacong24895/go-curd-generator/const"
-	"github.com/duytacong24895/go-curd-generator/core"
+	constants "github.com/duytacong24895/go-crud-generator/const"
+	"github.com/duytacong24895/go-crud-generator/core"
+	"github.com/duytacong24895/go-crud-generator/dtos"
+	"github.com/duytacong24895/go-crud-generator/services"
 )
 
-type handler struct {
-	service      IService
-	listModels   []*core.Model
-	core         *core.Core
+type Handler struct {
+	Service      services.IService
+	ListModels   []*core.Model
 	DTOGetDetail func(w http.ResponseWriter, r *http.Request, ref any) any
 	DTOGetList   func(w http.ResponseWriter, r *http.Request, ref any, total, page, pageSize uint) any
 	DTOError     func(w http.ResponseWriter, r *http.Request, err error, errMsg string) any
 }
 
-func (h *handler) GetList(w http.ResponseWriter, r *http.Request) {
-	var inputData = new(GetListQueryParams)
+func (h *Handler) GetList(w http.ResponseWriter, r *http.Request) {
+	var inputData = new(dtos.GetListQueryParams)
 	if err := inputData.Bind(r); err != nil {
 		h.ResponseError(w, r, err, err.Error())
 		return
@@ -31,7 +32,7 @@ func (h *handler) GetList(w http.ResponseWriter, r *http.Request) {
 		h.ResponseError(w, r, nil, "Model not found in context")
 		return
 	}
-	resData, total, err := h.service.GetList(model, inputData)
+	resData, total, err := h.Service.GetList(model, inputData)
 	if err != nil {
 		h.ResponseError(w, r, err, err.Error())
 		return
@@ -41,7 +42,7 @@ func (h *handler) GetList(w http.ResponseWriter, r *http.Request) {
 		uint(inputData.Page), uint(inputData.PageSize))
 }
 
-func (h *handler) GetListById(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetListById(w http.ResponseWriter, r *http.Request) {
 
 	model, ok := r.Context().Value(constants.ModelKey).(*core.Model)
 	if !ok {
@@ -49,14 +50,14 @@ func (h *handler) GetListById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	id := chi.URLParam(r, "id")
-	res, err := h.service.GetByID(model, id)
+	res, err := h.Service.GetByID(model, id)
 	if err != nil {
 		h.ResponseError(w, r, err, err.Error())
 		return
 	}
 	h.ResponseDetail(w, r, res)
 }
-func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 	// get params
 	var inputData = make(map[string]any)
 	if err := json.NewDecoder(r.Body).Decode(&inputData); err != nil {
@@ -69,7 +70,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 		h.ResponseError(w, r, nil, "Model not found in context")
 		return
 	}
-	res, err := h.service.Create(model, &inputData)
+	res, err := h.Service.Create(model, &inputData)
 	if err != nil {
 		h.ResponseError(w, r, err, err.Error())
 		return
@@ -81,7 +82,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-func (h *handler) Update(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 	var inputData = make(map[string]any)
 	if err := json.NewDecoder(r.Body).Decode(&inputData); err != nil {
 		h.ResponseError(w, r, err, err.Error())
@@ -94,21 +95,21 @@ func (h *handler) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	id := chi.URLParam(r, "id")
-	res, err := h.service.Update(model, &inputData, id)
+	res, err := h.Service.Update(model, &inputData, id)
 	if err != nil {
 		h.ResponseError(w, r, err, err.Error())
 		return
 	}
 	h.ResponseDetail(w, r, res)
 }
-func (h *handler) Delete(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
 	model, ok := r.Context().Value(constants.ModelKey).(*core.Model)
 	if !ok {
 		h.ResponseError(w, r, nil, "Model not found in context")
 		return
 	}
 	id := chi.URLParam(r, "id")
-	err := h.service.Delete(model, id)
+	err := h.Service.Delete(model, id)
 	if err != nil {
 		h.ResponseError(w, r, err, err.Error())
 		return
@@ -116,7 +117,7 @@ func (h *handler) Delete(w http.ResponseWriter, r *http.Request) {
 	h.ResponseDetail(w, r, nil)
 }
 
-func (h *handler) ResponseError(w http.ResponseWriter, r *http.Request,
+func (h *Handler) ResponseError(w http.ResponseWriter, r *http.Request,
 	err error, msgErr string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusInternalServerError)
@@ -131,7 +132,7 @@ func (h *handler) ResponseError(w http.ResponseWriter, r *http.Request,
 	}
 }
 
-func (h *handler) ResponseDetail(w http.ResponseWriter, r *http.Request,
+func (h *Handler) ResponseDetail(w http.ResponseWriter, r *http.Request,
 	ref any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -148,7 +149,7 @@ func (h *handler) ResponseDetail(w http.ResponseWriter, r *http.Request,
 	}
 }
 
-func (h *handler) ResponseGetList(w http.ResponseWriter, r *http.Request,
+func (h *Handler) ResponseGetList(w http.ResponseWriter, r *http.Request,
 	ref any, total, page, pageSize uint) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)

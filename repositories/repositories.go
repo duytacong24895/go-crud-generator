@@ -1,14 +1,14 @@
-package curd_generator
+package repositories
 
 import (
 	"time"
 
-	"github.com/duytacong24895/go-curd-generator/core"
+	"github.com/duytacong24895/go-crud-generator/core"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
-type Repository interface {
+type IRepository interface {
 	GetList(model *core.Model, page int, pageSize int,
 		filter core.IFilter, order_by string) ([]*map[string]any, int64, error)
 	Create(model *core.Model, inputData *map[string]any) (*map[string]any, error)
@@ -21,7 +21,7 @@ type repository struct {
 	db *gorm.DB
 }
 
-func NewRepository(db *gorm.DB) Repository {
+func NewRepository(db *gorm.DB) IRepository {
 	return &repository{
 		db: db,
 	}

@@ -1,4 +1,4 @@
-module github.com/duytacong24895/go-curd-generator
+module github.com/duytacong24895/go-crud-generator
 
 go 1.24.1
 

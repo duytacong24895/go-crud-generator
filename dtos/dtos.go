@@ -1,10 +1,10 @@
-package curd_generator
+package dtos
 
 import (
 	"net/http"
 	"strconv"
 
-	"github.com/duytacong24895/go-curd-generator/core"
+	"github.com/duytacong24895/go-crud-generator/core"
 )
 
 type GetListQueryParams struct {

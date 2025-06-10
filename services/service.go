@@ -1,24 +1,27 @@
-package curd_generator
+package services
 
 import (
 	"fmt"
 
-	"github.com/duytacong24895/go-curd-generator/core"
+	"github.com/duytacong24895/go-crud-generator/core"
+	"github.com/duytacong24895/go-crud-generator/dtos"
+	"github.com/duytacong24895/go-crud-generator/repositories"
+
 	"gorm.io/gorm"
 )
 
 type IService interface {
 	Create(model *core.Model, inputData *map[string]any) (any, error)
 	GetByID(model *core.Model, id string) (any, error)
-	GetList(model *core.Model, inputData *GetListQueryParams) ([]*map[string]any, int64, error)
+	GetList(model *core.Model, inputData *dtos.GetListQueryParams) ([]*map[string]any, int64, error)
 	Update(model *core.Model, inputData *map[string]any, id string) (*map[string]any, error)
 	Delete(model *core.Model, id string) error
 }
 type service struct {
-	repository Repository
+	repository repositories.IRepository
 }
 
-func NewService(repository Repository) IService {
+func NewService(repository repositories.IRepository) IService {
 	return &service{
 		repository: repository,
 	}
@@ -40,7 +43,7 @@ func (s *service) GetByID(model *core.Model, id string) (any, error) {
 	return entity, nil
 }
 
-func (s *service) GetList(model *core.Model, inputData *GetListQueryParams) ([]*map[string]any, int64, error) {
+func (s *service) GetList(model *core.Model, inputData *dtos.GetListQueryParams) ([]*map[string]any, int64, error) {
 	entities, total, err := s.repository.GetList(model, inputData.Page, inputData.PageSize,
 		inputData.Filter, inputData.OrderBy)
 	if err != nil {

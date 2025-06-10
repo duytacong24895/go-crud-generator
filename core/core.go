@@ -54,14 +54,3 @@ func (c Core) ExactSchemaGorm(model any) map[string]string {
 
 	return m
 }
-
-// func (c Core) Test() {
-// 	// test
-// 	type User struct {
-// 		ID    int
-// 		Name  string
-// 		Email string
-// 	}
-
-// 	user := User{}
-// }
