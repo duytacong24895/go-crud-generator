@@ -215,7 +215,6 @@ If you only have database, and there is no model struct. You can use gorm/gen to
 ## Roadmap
 - Write unit tests
 - Support for gin, echo ...
-- Support gen struct from db (Make out CRUD api from db)
 - Support permissions
 - Support Upload files
 

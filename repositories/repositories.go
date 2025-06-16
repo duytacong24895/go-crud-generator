@@ -83,7 +83,7 @@ func (r *repository) GetList(model *core.Model, page int, pageSize int,
 		return nil, 0, err
 	}
 
-	if err := queryStatement.Offset((page - 1) * pageSize).Limit(pageSize).
+	if err := queryStatement.Debug().Offset((page - 1) * pageSize).Limit(pageSize).
 		Find(&entities).Error; err != nil {
 		return nil, 0, err
 	}

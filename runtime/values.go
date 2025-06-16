@@ -13,6 +13,13 @@ type RegisteredModels struct {
 }
 
 func (r *RegisteredModels) Add(model *core.Model) {
+	// Check if the model already exists in the list
+	for _, existingModel := range r.List {
+		if existingModel.Name == model.Name {
+			// If it exists, we do not add it again
+			return
+		}
+	}
 	r.List = append(r.List, model)
 }
 
